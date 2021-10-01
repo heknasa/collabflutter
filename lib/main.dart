@@ -1,12 +1,20 @@
 import 'package:collabflutter/custom_expansion_tile.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'auth.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp(
-      home: MyApp()
+      initialRoute: '/',
+      routes: {
+        '/' : (context) => const LoginPage(),
+        '/main': (context) => const MyApp()
+      }
     )
   );
 }
@@ -58,7 +66,10 @@ class _MyAppState extends State<MyApp> {
                   },
                   child: Stack(
                     children: [
-                      Text(
+                      width <= 767
+                      ? // empty text instead of null
+                      Text('')
+                      : Text(
                         'TO DO LIST',
                         style: GoogleFonts.openSans(
                           textStyle: TextStyle(
@@ -75,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                         'TO DO LIST',
                         style: GoogleFonts.openSans(
                           textStyle: TextStyle(
-                            color: todoListColor,
+                            color: width <= 767 ? Color(0xFFE6E6E6) : todoListColor,
                             fontWeight: FontWeight.w800,
                             fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
                           )
