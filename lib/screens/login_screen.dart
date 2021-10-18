@@ -1,24 +1,23 @@
+import 'package:collabflutter/screens/todo_screen.dart';
 import 'package:flutter/material.dart';
-import 'authentication.dart';
+import '../services/auth_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'main.dart';
+import '../main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:collabflutter/theme.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({ Key? key }) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({ Key? key }) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double figmaFont = 2/3;
-    double mobileFont = 3/4;
-    double mobileIcon = 4/5;
     return Scaffold(
       backgroundColor: Color(0xFFB82E2E),
       body: 
@@ -34,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           } else if (snapshot.hasData) {
-            return MyApp();
+            Navigator.pushNamed(context, '/main');
           } return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
