@@ -15,8 +15,6 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  Color todoListColor = Color(0xFF1A1A1A);
-  double todoListStroke = 4.0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 'TO DO LIST',
                 style: GoogleFonts.openSans(
                   textStyle: TextStyle(
-                    color: width <= 767 ? Color(0xFFE6E6E6) : todoListColor,
+                    color: Color(0xFFE6E6E6),
                     fontWeight: FontWeight.w800,
                     fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
                   )

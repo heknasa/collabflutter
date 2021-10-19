@@ -1,8 +1,7 @@
 import 'package:collabflutter/providers/firebase_provider.dart';
+import 'package:collabflutter/states/auth_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../models/todo_model.dart';
-
-// final CollectionReference todos = FirebaseFirestore.instance.collection('todos').doc(GoogleAuth().auth.currentUser?.uid).collection('todo');
 
 abstract class BaseTodoRepository {
   Future<String> createTodo(TodoModel todo);
@@ -11,7 +10,7 @@ abstract class BaseTodoRepository {
   Future<void> deleteTodo(String id);
 }
 
-class TodoRepository {  
+class TodoRepository implements BaseTodoRepository {
   final Reader _read;
 
   TodoRepository(this._read);
@@ -20,26 +19,34 @@ class TodoRepository {
     return TodoRepository(ref.read);
   });
 
+  @override
   Future<String> createTodo(TodoModel todo) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
-    final _todos = _firestore.collection('todos').doc('authid').collection('todo');
+    final _uid = _read(AuthController.authControllerProvider)?.uid;
+    final _todos = _firestore.collection('todos').doc(_uid).collection('todo');
     final _todo = await _todos.add(todo.toMap());
     return _todo.id;
   }
 
+  @override
   Future<List<TodoModel>> readTodo() async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
-    final _todos = await _firestore.collection('todos').doc('authid').collection('todo').orderBy('waktu', descending: true).get();
+    final _uid = _read(AuthController.authControllerProvider)?.uid;
+    final _todos = await _firestore.collection('todos').doc(_uid).collection('todo').orderBy('waktu', descending: true).get();
     return _todos.docs.map((x) => TodoModel.fromDocument(x)).toList();
   }
 
+  @override
   Future<void> updateTodo(TodoModel todo) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
-    _firestore.collection('todos').doc('authid').collection('todo').doc(todo.id).update(todo.toMap());
+    final _uid = _read(AuthController.authControllerProvider)?.uid;
+    _firestore.collection('todos').doc(_uid).collection('todo').doc(todo.id).update(todo.toMap());
   }
 
+  @override
   Future<void> deleteTodo(String id) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
-    _firestore.collection('todos').doc('authid').collection('todo').doc(id).delete();
+    final _uid = _read(AuthController.authControllerProvider)?.uid;
+    _firestore.collection('todos').doc(_uid).collection('todo').doc(id).delete();
   }
 }

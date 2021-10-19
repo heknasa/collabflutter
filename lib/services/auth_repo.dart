@@ -1,52 +1,37 @@
-import 'package:collabflutter/main.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:collabflutter/providers/firebase_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleAuth {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  String? uid;
-  String? name;
-  String? userEmail;
-  String? imageURL;
+abstract class BaseAuthRepository {
+  Stream<User?> get authStateChanges;
+  User? get getCurrentUser;
+  Future<void> signInWithGoogle();  
+  Future<void> signOut();
+}
 
-  Future<User?> signInWithGoogle() async {
-    User? user;
+class AuthRepository implements BaseAuthRepository {
+  final Reader _read;
+  AuthRepository(this._read);
 
-    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+  static final authRepositoryProvider = Provider<AuthRepository>((ref) {
+    return AuthRepository(ref.read);
+  });
 
-    try {
-      final UserCredential userCredential =
-          await auth.signInWithPopup(googleProvider);
-      user = userCredential.user;
-    } catch (e) {
-      ScaffoldMessenger(
-        child: SnackBar(
-          backgroundColor: Color(0xFFB82E2E),
-          content: Text('There\'s an error.')
-        )
-      );
-    }
+  @override
+  Stream<User?> get authStateChanges => _read(FirebaseProvider.authProvider).authStateChanges();
 
-    if (user != null) {
-      uid = user.uid;
-      name = user.displayName;
-      userEmail = user.email;
-      imageURL = user.photoURL;
-    }
-    
-    return user;
+  @override
+  User? get getCurrentUser => _read(FirebaseProvider.authProvider).currentUser;
+
+  @override
+  Future<void> signInWithGoogle() async {
+    await _read(FirebaseProvider.authProvider).signInWithPopup(GoogleAuthProvider());
   }
 
-  void signOut() async {
-    await googleSignIn.signOut();
-    await FirebaseAuth.instance.signOut();
-
-    uid = null;
-    name = null;
-    userEmail = null;
-    imageURL = null;
+  @override
+  Future<void> signOut() async {
+    _read(FirebaseProvider.authProvider).signOut();
+    _read(FirebaseProvider.googleSignInProvider).signOut();
   }
 }
