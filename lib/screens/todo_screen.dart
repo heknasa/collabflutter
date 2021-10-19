@@ -23,70 +23,21 @@ class _TodoScreenState extends State<TodoScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // bottomNavigationBar: ConvexButton.fab(
-      //   backgroundColor: Colors.white,
-      //   color: Colors.black,
-      //   progress: _fabController,
-      //   onTap: () {
-      //     isClicked ? _fabController.forward() : _fabController.reverse();
-      //     isClicked = !isClicked;
-      //   },
-      // ),
       backgroundColor: Color(0xFF1A1A1A),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
               SizedBox(height: height * 0.05),
-              MouseRegion(
-                onEnter: (s) {
-                  setState(() {
-                    todoListColor = Color(0xFFE6E6E6);
-                    todoListStroke = 0.0;
-                  });
-                },
-                onExit: (s) {
-                  setState(() {
-                    todoListColor = Color(0xFF1A1A1A);
-                    todoListStroke = 4.0;
-                  });
-                },
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
-                    // navigate
-                  },
-                  child: Stack(
-                    children: [
-                      width <= 767
-                      ? // empty text instead of null
-                      Text('')
-                      : Text(
-                        'TO DO LIST',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont,
-                            foreground: Paint()
-                                ..style = PaintingStyle.stroke
-                                ..strokeWidth = todoListStroke
-                                ..color = Color(0xFFE6E6E6)
-                          )
-                        ),
-                      ),
-                      Text(
-                        'TO DO LIST',
-                        style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                            color: width <= 767 ? Color(0xFFE6E6E6) : todoListColor,
-                            fontWeight: FontWeight.w800,
-                            fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
-                          )
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              Text(
+                'TO DO LIST',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    color: width <= 767 ? Color(0xFFE6E6E6) : todoListColor,
+                    fontWeight: FontWeight.w800,
+                    fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
+                  )
+                ),       
               ),
               SizedBox(height: height * 0.1),
               Consumer(
