@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:collabflutter/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'custom/custom_expansion_tile.dart';
 import 'package:intl/intl.dart';
+import 'todo_dialog.dart';
+import 'package:collabflutter/states/todo_controller.dart';
 
-class Todo extends StatelessWidget {
-  final VoidCallback? onDone;  
+class Todo extends StatelessWidget{
+  final VoidCallback? onDone;
+  final VoidCallback? onUpdate;
   final String judul;
   final String tanggal;
   final String waktu;
@@ -18,6 +22,7 @@ class Todo extends StatelessWidget {
   const Todo({
     Key? key,
     required this.onDone,
+    required this.onUpdate,
     required this.judul,
     required this.tanggal,
     required this.waktu,
@@ -29,6 +34,7 @@ class Todo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final todoController = ref.watch(TodoController.todoControllerProvider);
     return Column(
       children: [
         Row(
@@ -128,7 +134,7 @@ class Todo extends StatelessWidget {
             ? Column(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: onUpdate,
                   child: Icon(
                     Icons.edit_rounded,
                     size: width <= 767 ? 20.0 * mobileIcon : 20.0,
@@ -163,7 +169,7 @@ class Todo extends StatelessWidget {
           : Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: onUpdate,
                   child: Icon(
                     Icons.edit_rounded,
                     size: width * 0.015,

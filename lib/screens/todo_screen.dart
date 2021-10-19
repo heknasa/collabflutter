@@ -1,5 +1,6 @@
 import 'package:collabflutter/components/todo_dialog.dart';
 import 'package:collabflutter/components/todo_widget.dart';
+import 'package:collabflutter/models/todo_model.dart';
 import 'package:collabflutter/states/todo_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +101,20 @@ class _TodoScreenState extends State<TodoScreen> {
                         return Todo(
                           onDone: () {
                             ref.read(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
-                          },                            
+                          },
+                          onUpdate: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return TodoDialog(
+                                  button: 'UPDATE',
+                                  todo: data[index],
+                                  width: width,
+                                  height: height
+                                );
+                              }
+                            );
+                          },
                           judul: data[index].judul ?? '',
                           tanggal: DateFormat('E, d/M/y').format((data[index].tanggal!).toDate()).toString(),
                           waktu: DateFormat('hh:mm a').format((data[index].waktu!).toDate()).toString(),
@@ -128,7 +142,12 @@ class _TodoScreenState extends State<TodoScreen> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return TodoDialog(width: width, height: height);
+                      return TodoDialog(
+                        button: 'CREATE',
+                        todo: TodoModel.empty(),
+                        width: width,
+                        height: height
+                      );
                     }
                   );
                 },

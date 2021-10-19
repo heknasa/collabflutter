@@ -18,6 +18,14 @@ class TodoModel {
     this.deskripsi
   });
 
+  factory TodoModel.empty() => TodoModel(
+    judul: null,
+    tanggal: null,
+    waktu: null,
+    kategori: null,
+    deskripsi: null
+  );
+
   TodoModel copyWith({String? id, String? judul, Timestamp? tanggal, Timestamp? waktu, String? kategori, String? deskripsi}) {
     return TodoModel(
       id: id ?? this.id,

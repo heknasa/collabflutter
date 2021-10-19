@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:collabflutter/theme.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,11 +8,13 @@ import 'package:collabflutter/states/todo_controller.dart';
 import 'package:collabflutter/models/todo_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class TodoDialog extends ConsumerStatefulWidget {
+class TodoDialog extends StatefulHookConsumerWidget {  
+  final String button;
+  final TodoModel todo;
   final double width;
   final double height;
 
-  const TodoDialog({Key? key, required this.width, required this.height}) : super(key: key);
+  const TodoDialog({Key? key, required this.button, required this.todo, required this.width, required this.height}) : super(key: key);
 
   @override
   TodoDialogState createState() => TodoDialogState();
@@ -21,13 +24,13 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
   DateTime? _time;
   DateTime? _date;
   TimeOfDay? _timeState;
-  final _contJudul = TextEditingController();
-  final _contKategori = TextEditingController();
-  final _contDeskripsi = TextEditingController();
   
   @override
   Widget build(BuildContext context) {
     final todoNotifier = ref.read(TodoController.todoControllerProvider.notifier);
+    final TextEditingController? _contJudul = useTextEditingController(text: widget.todo.judul);
+    final TextEditingController? _contKategori = useTextEditingController(text: widget.todo.kategori);
+    final TextEditingController? _contDeskripsi = useTextEditingController(text: widget.todo.deskripsi);
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(widget.width * 0.01)),
       backgroundColor: Color(0xFF333333),
@@ -44,7 +47,7 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
                   // return empty
                   Text(''),
                   Text(
-                    'ADD TO DO',
+                    widget.button == 'CREATE' ? 'CREATE TODO' : 'UPDATE TODO',
                     style: textStyle(widget.width, Color(0xFFE6E6E6), FontWeight.w700, 36.0)
                   ),
                   MouseRegion(
@@ -132,7 +135,11 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
                                 });
                               },
                               child: Text(
-                                _date != null ? DateFormat('E, d/M/y').format(_date!).toString() : 'show calendar',
+                                _date != null
+                                ? DateFormat('E, d/M/y').format(_date!).toString()
+                                : widget.todo.tanggal != null
+                                ? DateFormat('E, d/M/y').format((widget.todo.tanggal!).toDate()).toString()
+                                : 'show calendar',
                                   style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     color: Color(0xFFCCCCCC),
@@ -177,7 +184,11 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
                                 });
                               },
                               child: Text(
-                                _timeState != null ? _timeState!.format(context) : 'show clock',
+                                _timeState != null
+                                ? _timeState!.format(context)
+                                : widget.todo.waktu != null
+                                ? DateFormat('hh:mm a').format((widget.todo.waktu!).toDate()).toString()
+                                : 'show clock',
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     color: Color(0xFFCCCCCC),
@@ -221,7 +232,7 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
                       style: textStyle(widget.width, Color(0xFFCCCCCC), FontWeight.w400, 24.0)
                     ),
                     TextField(
-                      controller: _contDeskripsi,
+                      controller:_contDeskripsi,
                       cursorColor: Color(0xFFCCCCCC),
                       maxLength: 200,
                       maxLines: 5,
@@ -248,15 +259,28 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
               SizedBox(height: widget.width * 0.01),
               ElevatedButton(
                 onPressed: () {
-                  todoNotifier.addTodo(
-                    TodoModel(
-                      judul: _contJudul.text,
-                      tanggal: Timestamp.fromDate(_date!),
-                      waktu: Timestamp.fromDate(_time!),
-                      kategori: _contKategori.text,
-                      deskripsi: _contDeskripsi.text,
-                    )
-                  );
+                  if (widget.button == 'CREATE') {
+                    todoNotifier.addTodo(
+                      TodoModel(
+                        judul: _contJudul!.text,
+                        tanggal: Timestamp.fromDate(_date!),
+                        waktu: Timestamp.fromDate(_time!),
+                        kategori: _contKategori!.text,
+                        deskripsi: _contDeskripsi!.text,
+                      )
+                    );
+                  } else if (widget.button == 'UPDATE') {
+                    todoNotifier.editTodo(
+                      TodoModel(
+                        id: widget.todo.id,
+                        judul: _contJudul == null ? widget.todo.judul :  _contJudul.text,
+                        tanggal: _date == null ? widget.todo.tanggal : Timestamp.fromDate(_date!),
+                        waktu: _time == null ? widget.todo.waktu : Timestamp.fromDate(_time!),
+                        kategori: _contKategori == null ? widget.todo.kategori : _contKategori.text,
+                        deskripsi: _contDeskripsi == null ? widget.todo.deskripsi : _contDeskripsi.text,
+                      )
+                    );
+                  }
                   setState(() {
                     _date = null;
                     _timeState = null;
@@ -264,7 +288,7 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  'CREATE',
+                  widget.button,
                   style: textStyle(widget.width, Color(0xFFE6E6E6), FontWeight.w800, 24.0),
                 ),
                 style: ButtonStyle(
