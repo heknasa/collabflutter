@@ -8,20 +8,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:collabflutter/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:collabflutter/providers/theme_provider.dart';
 
-class TodoScreen extends StatefulWidget {
+class TodoScreen extends ConsumerStatefulWidget {
   @override
-  State<TodoScreen> createState() => _TodoScreenState();
+  TodoScreenState createState() => TodoScreenState();
 }
 
-class _TodoScreenState extends State<TodoScreen> {
+class TodoScreenState extends ConsumerState<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Color(0xFF1A1A1A),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          ref.watch(themeMode.notifier).changeThemeMode();
+        },
+        label: Text(
+          'THEME',
+        )
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -31,7 +39,6 @@ class _TodoScreenState extends State<TodoScreen> {
                 'TO DO LIST',
                 style: GoogleFonts.openSans(
                   textStyle: TextStyle(
-                    color: Color(0xFFE6E6E6),
                     fontWeight: FontWeight.w800,
                     fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
                   )
