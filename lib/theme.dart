@@ -22,6 +22,18 @@ const FontWeight black = FontWeight.w900;
 
 const FontStyle italic = FontStyle.italic;
 
+const double headline1 = 103;
+const double headline2 = 64;
+const double headline3 = 51;
+const double headline4 = 36;
+const double headline5 = 26;
+const double headline6 = 21;
+const double subtitle1 = 17;
+const double subtitle2 = 15;
+const double button = 15;
+const double caption = 13;
+const double overline = 11;
+
 TextStyle textStyle(double width, Color color, FontWeight? weight, double fontSize) {
   return GoogleFonts.workSans(
     textStyle: TextStyle(

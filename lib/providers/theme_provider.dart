@@ -31,13 +31,13 @@ final _theme = ThemeData(
     primaryVariant: Colors.grey.shade700,
     secondary: Colors.blueGrey.shade200,
     secondaryVariant: Colors.blueGrey.shade900,
-    surface: Colors.white,
-    background: Colors.white,
+    surface: Color(0xFFF2F2F2),
+    background: Color(0xFFF2F2F2),
     error: Colors.red,
     onPrimary: Colors.white,
     onSecondary: Colors.black,
-    onSurface: Color(0xFFF2F2F2),
-    onBackground: Color(0xFFF2F2F2),
+    onSurface: Colors.black,
+    onBackground: Colors.black,
     onError: Colors.white,
     brightness: Brightness.light
   ),
@@ -58,6 +58,6 @@ final _darkTheme = ThemeData(
     onSurface: Colors.white,
     onBackground: Colors.white,
     onError: Colors.black,
-    brightness: Brightness.dark
+    brightness: Brightness.dark,
   ),
 );

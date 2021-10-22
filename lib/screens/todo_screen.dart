@@ -1,7 +1,10 @@
+import 'package:collabflutter/components/custom/custom_convex_app_bar.dart';
 import 'package:collabflutter/components/todo_dialog.dart';
 import 'package:collabflutter/components/todo_widget.dart';
 import 'package:collabflutter/models/todo_model.dart';
 import 'package:collabflutter/states/todo_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,26 +12,34 @@ import 'package:intl/intl.dart';
 import 'package:collabflutter/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:collabflutter/providers/theme_provider.dart';
+import 'package:collabflutter/states/auth_controller.dart';
 
-class TodoScreen extends ConsumerStatefulWidget {
-  @override
-  TodoScreenState createState() => TodoScreenState();
-}
-
-class TodoScreenState extends ConsumerState<TodoScreen> {
+class TodoScreen extends StatelessWidget{
+  const TodoScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    // final _animationController = AnimationController(vsync: this) (hook);
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ref.watch(themeMode.notifier).changeThemeMode();
-        },
-        label: Text(
-          'THEME',
-        )
+      // bottomNavigationBar: HelloConvexButton.fab(
+      //   foregroundColor: Theme.of(context).colorScheme.onSurface,
+      //   backgroundColor: Theme.of(context).colorScheme.surface,
+      //   bottomMargin: height * 0.01,
+      //   progress: _animationController,
+      // ),
+      floatingActionButton: Consumer(
+        builder: (context, ref, child) {
+          return FloatingActionButton.extended(
+            onPressed: () {
+              ref.watch(themeMode.notifier).changeThemeMode();
+            },
+            label: Text(
+              'THEME',
+            )
+          );
+        }
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -56,7 +67,7 @@ class TodoScreenState extends ConsumerState<TodoScreen> {
                       itemBuilder: (context, index) {
                         return Todo(
                           onDone: () {
-                            ref.read(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
+                            ref.watch(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
                           },
                           onUpdate: () {
                             showDialog(
@@ -110,15 +121,9 @@ class TodoScreenState extends ConsumerState<TodoScreen> {
                 child: Icon(
                   Icons.add_rounded,
                   size: width <= 767 ? 20.0 * mobileIcon : 20.0,
-                  color: Color(0xFF1A1A1A),
                 ),
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01))),
-                  backgroundColor: MaterialStateProperty.all(Color(0xFFB82E2E)),
-                  shadowColor: MaterialStateProperty.all(Color(0xFFB82E2E)),
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
-                    if (states.contains(MaterialState.pressed)) return Color(0xFFCCCCCC);
-                  })
                 ),
               )
             ],
