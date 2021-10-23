@@ -3,6 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +64,9 @@ class HelloExpansionTile extends StatefulWidget {
     this.iconColor,
     this.collapsedIconColor,
     this.controlAffinity,
+  // ignore: unnecessary_null_comparison
   }) : assert(initiallyExpanded != null),
+       // ignore: unnecessary_null_comparison
        assert(maintainState != null),
        assert(
        expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
@@ -284,6 +288,7 @@ class _HelloExpansionTileState extends State<HelloExpansionTile> with SingleTick
     return _buildIcon(context);
   }
 
+  // ignore: unused_element
   Widget? _buildTrailingIcon(BuildContext context) {
     if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.trailing)
       return null;

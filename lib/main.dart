@@ -1,15 +1,10 @@
 import 'package:collabflutter/screens/splash_screen.dart';
-import 'package:collabflutter/temporary_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/todo_screen.dart';
 import 'screens/login_screen.dart';
-import 'services/todo_repo.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'screens/home_screen.dart';
 import 'providers/global_providers.dart';
 import 'providers/theme_provider.dart';
@@ -29,10 +24,10 @@ void main() async {
             darkTheme: ref.watch(darkTheme),
             initialRoute: '/',
             getPages: [
-              GetPage(name: '/', page: () => SplashScreen()),
-              GetPage(name: '/home', page: () => HomeScreen(), middlewares: [_Unauthorized()]),
-              GetPage(name: '/todo', page: () => TodoScreen(), middlewares: [_Unauthorized()]),
-              GetPage(name: '/login', page: () => LoginScreen(), middlewares: [_Authorized()]),
+              GetPage(name: '/', page: () => const SplashScreen()),
+              GetPage(name: '/home', page: () => const HomeScreen(), middlewares: [_Unauthorized()]),
+              GetPage(name: '/todo', page: () => const TodoScreen(), middlewares: [_Unauthorized()]),
+              GetPage(name: '/login', page: () => const LoginScreen(), middlewares: [_Authorized()]),
             ],
           );
         }
@@ -59,7 +54,7 @@ class _Authorized extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     return userExistence?.currentUser != null
-        ? RouteSettings(name: '/home')
+        ? const RouteSettings(name: '/home')
         : null;
   }
 }

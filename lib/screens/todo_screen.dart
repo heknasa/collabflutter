@@ -1,21 +1,17 @@
-import 'package:collabflutter/components/custom/custom_convex_app_bar.dart';
 import 'package:collabflutter/components/todo_dialog.dart';
 import 'package:collabflutter/components/todo_widget.dart';
 import 'package:collabflutter/models/todo_model.dart';
 import 'package:collabflutter/states/todo_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:collabflutter/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:collabflutter/providers/theme_provider.dart';
-import 'package:collabflutter/states/auth_controller.dart';
 
 class TodoScreen extends StatelessWidget{
   const TodoScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,17 +25,29 @@ class TodoScreen extends StatelessWidget{
       //   bottomMargin: height * 0.01,
       //   progress: _animationController,
       // ),
-      floatingActionButton: Consumer(
-        builder: (context, ref, child) {
-          return FloatingActionButton.extended(
-            onPressed: () {
-              ref.watch(themeMode.notifier).changeThemeMode();
-            },
-            label: Text(
-              'THEME',
-            )
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return TodoDialog(
+                button: 'CREATE',
+                todo: TodoModel.empty(),
+                width: width,
+                height: height
+              );
+            }
           );
-        }
+        },
+        icon: const Icon(
+          Icons.add_rounded,
+        ),
+        label: const Text(
+          'CREATE',
+          style: TextStyle(
+            fontWeight: bold,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -48,12 +56,10 @@ class TodoScreen extends StatelessWidget{
               SizedBox(height: height * 0.05),
               Text(
                 'TO DO LIST',
-                style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
-                  )
-                ),       
+                style: TextStyle(
+                  fontWeight: extrabold,
+                  fontSize: width <= breakpoint ? headline4 * mobile : headline4
+                )
               ),
               SizedBox(height: height * 0.1),
               Consumer(
@@ -67,7 +73,24 @@ class TodoScreen extends StatelessWidget{
                       itemBuilder: (context, index) {
                         return Todo(
                           onDone: () {
-                            ref.watch(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
+                            TodoModel? _todo = data[index];
+                            ref.watch(TodoController.todoControllerProvider.notifier).removeTodo(_todo.id ?? 'id');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.symmetric(horizontal: width <= breakpoint ? width * 0.1 : width * 0.2),
+                                content: const Text(
+                                  'SEMANGAT TERUS! \u{1F525}',
+                                  style: TextStyle(
+                                    fontWeight: semibold
+                                  ),
+                                ),
+                                action: SnackBarAction(
+                                  label: 'UNDO',
+                                  onPressed: () => ref.read(TodoController.todoControllerProvider.notifier).addTodo(_todo)
+                                ),
+                              )
+                            );
                           },
                           onUpdate: () {
                             showDialog(
@@ -82,6 +105,54 @@ class TodoScreen extends StatelessWidget{
                               }
                             );
                           },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01)),
+                                  actionsPadding: EdgeInsets.all(width <= breakpoint ? width * 0.015 : width * 0.02),
+                                  title: Center(
+                                    child: Text(
+                                      'Hapus?',
+                                      style: TextStyle(
+                                        fontWeight: bold,
+                                        fontSize: width <= breakpoint ? headline5 * mobile : headline5
+                                      ),
+                                    ),
+                                  ),
+                                  content: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                      onPressed: () {
+                                        ref.watch(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
+                                        Get.back();
+                                      },
+                                      child: Text(
+                                        'IYA',
+                                        style: TextStyle(
+                                          fontSize: width <= breakpoint ? button * mobile : button
+                                          ),
+                                        )
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        child: Text(
+                                          'ENGGAK',
+                                          style: TextStyle(
+                                            fontSize: width <= breakpoint ? button * mobile : button
+                                          ),
+                                        )
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                            );
+                          },
                           judul: data[index].judul ?? '',
                           tanggal: DateFormat('E, d/M/y').format((data[index].tanggal!).toDate()).toString(),
                           waktu: DateFormat('hh:mm a').format((data[index].waktu!).toDate()).toString(),
@@ -92,10 +163,8 @@ class TodoScreen extends StatelessWidget{
                         );
                       }
                     ),
-                    loading: (_) => Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFE6E6E6))
-                      )
+                    loading: (_) => const Center(
+                      child: RefreshProgressIndicator()
                     ),
                     error: (error, stack, _) => Center(
                       child: Text(error.toString())
@@ -104,27 +173,21 @@ class TodoScreen extends StatelessWidget{
                 }
               ),
               SizedBox(height: height * 0.01),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return TodoDialog(
-                        button: 'CREATE',
-                        todo: TodoModel.empty(),
-                        width: width,
-                        height: height
-                      );
-                    }
+              Consumer(
+                builder: (context, ref, child) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      ref.watch(themeMode.notifier).changeThemeMode();
+                    },
+                    child: Icon(
+                      Icons.palette,
+                      size: width <= 767 ? 20.0 * mobile : 20.0,
+                    ),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01))),
+                    ),
                   );
-                },
-                child: Icon(
-                  Icons.add_rounded,
-                  size: width <= 767 ? 20.0 * mobileIcon : 20.0,
-                ),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01))),
-                ),
+                }
               )
             ],
           ),

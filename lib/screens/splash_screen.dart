@@ -1,17 +1,16 @@
 import 'dart:async';
 
-import 'package:collabflutter/states/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SplashScreen extends StatelessWidget {
-  StreamSubscription<User?>? _authStateSubscription;
+  const SplashScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
+    StreamSubscription<User?>? _authStateSubscription;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if(user != null) {
         String returnURL = Get.parameters['return'] ?? '/home';
@@ -25,14 +24,10 @@ class SplashScreen extends StatelessWidget {
       }
     });
     _authStateSubscription?.cancel();
-    return Scaffold(
-      body: Consumer(
-        builder: (context, ref, child) {          
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      ),
+    return const Scaffold(
+      body: Center(
+          child: CircularProgressIndicator(),
+      )
     );
   }
 }

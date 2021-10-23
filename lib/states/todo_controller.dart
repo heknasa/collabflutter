@@ -3,7 +3,7 @@ import 'package:collabflutter/models/todo_model.dart';
 import 'package:collabflutter/services/todo_repo.dart';
 
 class TodoController extends StateNotifier<AsyncValue<List<TodoModel>>> {
-  TodoController(this._read) : super(AsyncValue.loading()) {
+  TodoController(this._read) : super(const AsyncValue.loading()) {
     getTodo();
   }
 

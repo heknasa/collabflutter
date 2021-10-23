@@ -14,14 +14,19 @@
  *  limitations under the License.
  */
 
+// ignore: implementation_imports
 import 'package:convex_bottom_bar/src/painter.dart';
 import 'package:flutter/material.dart';
 
 /// Single convex button widget
 class HelloConvexButton extends StatelessWidget {
+  // ignore: constant_identifier_names
   static const _DEFAULT_SIZE = 60.0;
+  // ignore: constant_identifier_names
   static const _DEFAULT_TOP = 50.0;
+  // ignore: constant_identifier_names
   static const _DEFAULT_SIGMA = 2.0;
+  // ignore: constant_identifier_names
   static const _DEFAULT_THICKNESS = 4.0;
 
   /// Size of convex shape, should be lager than [top]
@@ -88,6 +93,7 @@ class HelloConvexButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.bottomCenter, children: <Widget>[
+      // ignore: sized_box_for_whitespace
       Container(
         height: thickness ?? _DEFAULT_THICKNESS,
         width: double.infinity,
