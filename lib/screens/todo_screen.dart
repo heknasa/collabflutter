@@ -4,24 +4,51 @@ import 'package:collabflutter/models/todo_model.dart';
 import 'package:collabflutter/states/todo_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:collabflutter/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:collabflutter/providers/theme_provider.dart';
 
-class TodoScreen extends StatefulWidget {
-  @override
-  State<TodoScreen> createState() => _TodoScreenState();
-}
+class TodoScreen extends StatelessWidget{
+  const TodoScreen({Key? key}) : super(key: key);
 
-class _TodoScreenState extends State<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    // final _animationController = AnimationController(vsync: this) (hook);
     return Scaffold(
-      backgroundColor: Color(0xFF1A1A1A),
+      // bottomNavigationBar: HelloConvexButton.fab(
+      //   foregroundColor: Theme.of(context).colorScheme.onSurface,
+      //   backgroundColor: Theme.of(context).colorScheme.surface,
+      //   bottomMargin: height * 0.01,
+      //   progress: _animationController,
+      // ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return TodoDialog(
+                button: 'CREATE',
+                todo: TodoModel.empty(),
+                width: width,
+                height: height
+              );
+            }
+          );
+        },
+        icon: const Icon(
+          Icons.add_rounded,
+        ),
+        label: const Text(
+          'CREATE',
+          style: TextStyle(
+            fontWeight: bold,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -29,13 +56,10 @@ class _TodoScreenState extends State<TodoScreen> {
               SizedBox(height: height * 0.05),
               Text(
                 'TO DO LIST',
-                style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                    color: Color(0xFFE6E6E6),
-                    fontWeight: FontWeight.w800,
-                    fontSize: width <= 767 ? 36.0 * figmaFont * mobileFont : 36.0 * figmaFont
-                  )
-                ),       
+                style: TextStyle(
+                  fontWeight: extrabold,
+                  fontSize: width <= breakpoint ? headline4 * mobile : headline4
+                )
               ),
               SizedBox(height: height * 0.1),
               Consumer(
@@ -49,7 +73,24 @@ class _TodoScreenState extends State<TodoScreen> {
                       itemBuilder: (context, index) {
                         return Todo(
                           onDone: () {
-                            ref.read(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
+                            TodoModel? _todo = data[index];
+                            ref.watch(TodoController.todoControllerProvider.notifier).removeTodo(_todo.id ?? 'id');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.symmetric(horizontal: width <= breakpoint ? width * 0.1 : width * 0.2),
+                                content: const Text(
+                                  'SEMANGAT TERUS! \u{1F525}',
+                                  style: TextStyle(
+                                    fontWeight: semibold
+                                  ),
+                                ),
+                                action: SnackBarAction(
+                                  label: 'UNDO',
+                                  onPressed: () => ref.read(TodoController.todoControllerProvider.notifier).addTodo(_todo)
+                                ),
+                              )
+                            );
                           },
                           onUpdate: () {
                             showDialog(
@@ -64,6 +105,54 @@ class _TodoScreenState extends State<TodoScreen> {
                               }
                             );
                           },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01)),
+                                  actionsPadding: EdgeInsets.all(width <= breakpoint ? width * 0.015 : width * 0.02),
+                                  title: Center(
+                                    child: Text(
+                                      'Hapus?',
+                                      style: TextStyle(
+                                        fontWeight: bold,
+                                        fontSize: width <= breakpoint ? headline5 * mobile : headline5
+                                      ),
+                                    ),
+                                  ),
+                                  content: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                      onPressed: () {
+                                        ref.watch(TodoController.todoControllerProvider.notifier).removeTodo(data[index].id ?? 'id');
+                                        Get.back();
+                                      },
+                                      child: Text(
+                                        'IYA',
+                                        style: TextStyle(
+                                          fontSize: width <= breakpoint ? button * mobile : button
+                                          ),
+                                        )
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        child: Text(
+                                          'ENGGAK',
+                                          style: TextStyle(
+                                            fontSize: width <= breakpoint ? button * mobile : button
+                                          ),
+                                        )
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                            );
+                          },
                           judul: data[index].judul ?? '',
                           tanggal: DateFormat('E, d/M/y').format((data[index].tanggal!).toDate()).toString(),
                           waktu: DateFormat('hh:mm a').format((data[index].waktu!).toDate()).toString(),
@@ -74,10 +163,8 @@ class _TodoScreenState extends State<TodoScreen> {
                         );
                       }
                     ),
-                    loading: (_) => Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFE6E6E6))
-                      )
+                    loading: (_) => const Center(
+                      child: RefreshProgressIndicator()
                     ),
                     error: (error, stack, _) => Center(
                       child: Text(error.toString())
@@ -86,33 +173,21 @@ class _TodoScreenState extends State<TodoScreen> {
                 }
               ),
               SizedBox(height: height * 0.01),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return TodoDialog(
-                        button: 'CREATE',
-                        todo: TodoModel.empty(),
-                        width: width,
-                        height: height
-                      );
-                    }
+              Consumer(
+                builder: (context, ref, child) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      ref.watch(themeMode.notifier).changeThemeMode();
+                    },
+                    child: Icon(
+                      Icons.palette,
+                      size: width <= 767 ? 20.0 * mobile : 20.0,
+                    ),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01))),
+                    ),
                   );
-                },
-                child: Icon(
-                  Icons.add_rounded,
-                  size: width <= 767 ? 20.0 * mobileIcon : 20.0,
-                  color: Color(0xFF1A1A1A),
-                ),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01))),
-                  backgroundColor: MaterialStateProperty.all(Color(0xFFB82E2E)),
-                  shadowColor: MaterialStateProperty.all(Color(0xFFB82E2E)),
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
-                    if (states.contains(MaterialState.pressed)) return Color(0xFFCCCCCC);
-                  })
-                ),
+                }
               )
             ],
           ),

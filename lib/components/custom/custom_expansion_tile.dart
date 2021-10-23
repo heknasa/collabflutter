@@ -1,53 +1,72 @@
+
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+// ignore_for_file: curly_braces_in_flow_control_structures
 
-//import 'colors.dart';
-//import 'icons.dart';
-//import 'list_tile.dart';
-//import 'theme.dart';
-//import 'theme_data.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
 
-/// A single-line [ListTile] with a trailing button that expands or collapses
+/// A single-line [ListTile] with an expansion arrow icon that expands or collapses
 /// the tile to reveal or hide the [children].
 ///
 /// This widget is typically used with [ListView] to create an
 /// "expand / collapse" list entry. When used with scrolling widgets like
 /// [ListView], a unique [PageStorageKey] must be specified to enable the
-/// [MyExpansionTile] to save and restore its expanded state when it is scrolled
+/// [HelloExpansionTile] to save and restore its expanded state when it is scrolled
 /// in and out of view.
+///
+/// This class overrides the [ListTileTheme.iconColor] and [ListTileTheme.textColor]
+/// theme properties for its [ListTile]. These colors animate between values when
+/// the tile is expanded and collapsed: between [iconColor], [collapsedIconColor] and
+/// between [textColor] and [collapsedTextColor].
+///
+/// The expansion arrow icon is shown on the right by default in left-to-right languages
+/// (i.e. the trailing edge). This can be changed using [controlAffinity]. This maps
+/// to the [leading] and [trailing] properties of [HelloExpansionTile].
+///
+/// {@tool dartpad --template=stateful_widget_scaffold}
+/// This example demonstrates different configurations of ExpansionTile.
+///
+/// ** See code in examples/api/lib/material/expansion_tile/expansion_tile.0.dart **
+/// {@end-tool}
 ///
 /// See also:
 ///
 ///  * [ListTile], useful for creating expansion tile [children] when the
 ///    expansion tile represents a sublist.
-///  * The "Expand/collapse" section of
-///    <https://material.io/guidelines/components/lists-controls.html>.
-class MyExpansionTile extends StatefulWidget {
-  /// Creates a single-line [ListTile] with a trailing button that expands or collapses
+///  * The "Expand and collapse" section of
+///    <https://material.io/components/lists#types>
+class HelloExpansionTile extends StatefulWidget {
+  /// Creates a single-line [ListTile] with an expansion arrow icon that expands or collapses
   /// the tile to reveal or hide the [children]. The [initiallyExpanded] property must
   /// be non-null.
-  const MyExpansionTile({
+  const HelloExpansionTile({
     Key? key,
     this.leading,
     required this.title,
     this.subtitle,
-    this.backgroundColor,
     this.onExpansionChanged,
     this.children = const <Widget>[],
-    /*this.trailing,*/
     this.initiallyExpanded = false,
     this.maintainState = false,
     this.tilePadding,
     this.expandedCrossAxisAlignment,
     this.expandedAlignment,
     this.childrenPadding,
+    this.backgroundColor,
+    this.collapsedBackgroundColor,
+    this.textColor,
+    this.collapsedTextColor,
+    this.iconColor,
+    this.collapsedIconColor,
+    this.controlAffinity,
+  // ignore: unnecessary_null_comparison
   }) : assert(initiallyExpanded != null),
+       // ignore: unnecessary_null_comparison
        assert(maintainState != null),
        assert(
        expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
@@ -59,6 +78,9 @@ class MyExpansionTile extends StatefulWidget {
   /// A widget to display before the title.
   ///
   /// Typically a [CircleAvatar] widget.
+  ///
+  /// Note that depending on the value of [controlAffinity], the [leading] widget
+  /// may replace the rotating expansion arrow icon.
   final Widget? leading;
 
   /// The primary content of the list item.
@@ -86,8 +108,13 @@ class MyExpansionTile extends StatefulWidget {
   /// The color to display behind the sublist when expanded.
   final Color? backgroundColor;
 
-//  /// A widget to display instead of a rotating arrow icon.
-//  final Widget trailing;
+  /// When not null, defines the background color of tile when the sublist is collapsed.
+  final Color? collapsedBackgroundColor;
+
+  /// A widget to display after the title.
+  ///
+  /// Note that depending on the value of [controlAffinity], the [trailing] widget
+  /// may replace the rotating expansion arrow icon.
 
   /// Specifies if the list tile is initially expanded (true) or collapsed (false, the default).
   final bool initiallyExpanded;
@@ -145,11 +172,38 @@ class MyExpansionTile extends StatefulWidget {
   /// When the value is null, the value of `childrenPadding` is [EdgeInsets.zero].
   final EdgeInsetsGeometry? childrenPadding;
 
+  /// The icon color of tile's expansion arrow icon when the sublist is expanded.
+  ///
+  /// Used to override to the [ListTileTheme.iconColor].
+  final Color? iconColor;
+
+  /// The icon color of tile's expansion arrow icon when the sublist is collapsed.
+  ///
+  /// Used to override to the [ListTileTheme.iconColor].
+  final Color? collapsedIconColor;
+
+
+  /// The color of the tile's titles when the sublist is expanded.
+  ///
+  /// Used to override to the [ListTileTheme.textColor].
+  final Color? textColor;
+
+  /// The color of the tile's titles when the sublist is collapsed.
+  ///
+  /// Used to override to the [ListTileTheme.textColor].
+  final Color? collapsedTextColor;
+
+  /// Typically used to force the expansion arrow icon to the tile's leading or trailing edge.
+  ///
+  /// By default, the value of `controlAffinity` is [ListTileControlAffinity.platform],
+  /// which means that the expansion arrow icon will appear on the tile's trailing edge.
+  final ListTileControlAffinity? controlAffinity;
+
   @override
-  _MyExpansionTileState createState() => _MyExpansionTileState();
+  State<HelloExpansionTile> createState() => _HelloExpansionTileState();
 }
 
-class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProviderStateMixin {
+class _HelloExpansionTileState extends State<HelloExpansionTile> with SingleTickerProviderStateMixin {
   static final Animatable<double> _easeOutTween = CurveTween(curve: Curves.easeOut);
   static final Animatable<double> _easeInTween = CurveTween(curve: Curves.easeIn);
   static final Animatable<double> _halfTween = Tween<double>(begin: 0.0, end: 0.5);
@@ -160,7 +214,7 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
   final ColorTween _backgroundColorTween = ColorTween();
 
   late AnimationController _controller;
-  Animation<double>? _iconTurns;
+  late Animation<double> _iconTurns;
   late Animation<double> _heightFactor;
   late Animation<Color?> _borderColor;
   late Animation<Color?> _headerColor;
@@ -207,8 +261,38 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
       }
       PageStorage.of(context)?.writeState(context, _isExpanded);
     });
-    if (widget.onExpansionChanged != null)
-      widget.onExpansionChanged!(_isExpanded);
+    widget.onExpansionChanged?.call(_isExpanded);
+  }
+
+  // Platform or null affinity defaults to trailing.
+  ListTileControlAffinity _effectiveAffinity(ListTileControlAffinity? affinity) {
+    switch (affinity ?? ListTileControlAffinity.trailing) {
+      case ListTileControlAffinity.leading:
+        return ListTileControlAffinity.leading;
+      case ListTileControlAffinity.trailing:
+      case ListTileControlAffinity.platform:
+        return ListTileControlAffinity.trailing;
+    }
+  }
+
+  Widget? _buildIcon(BuildContext context) {
+    return RotationTransition(
+      turns: _iconTurns,
+      child: const Icon(Icons.expand_more),
+    );
+  }
+
+  Widget? _buildLeadingIcon(BuildContext context) {
+    if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.leading)
+      return null;
+    return _buildIcon(context);
+  }
+
+  // ignore: unused_element
+  Widget? _buildTrailingIcon(BuildContext context) {
+    if (_effectiveAffinity(widget.controlAffinity) != ListTileControlAffinity.trailing)
+      return null;
+    return _buildIcon(context);
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
@@ -231,13 +315,9 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
             child: ListTile(
               onTap: _handleTap,
               contentPadding: widget.tilePadding,
-              leading: widget.leading,
+              leading: widget.leading ?? _buildLeadingIcon(context),
               title: widget.title,
               subtitle: widget.subtitle,
-              /*trailing: widget.trailing ?? RotationTransition(
-                turns: _iconTurns,
-                child: const Icon(Icons.expand_more),
-              ),*/
             ),
           ),
           ClipRect(
@@ -253,26 +333,14 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
   }
 
   @override
-  void didChangeDependencies() {
-    final ThemeData theme = Theme.of(context);
-    _borderColorTween.end = theme.dividerColor;
-    _headerColorTween
-      ..begin = theme.textTheme.subtitle1!.color
-      ..end = theme.accentColor;
-    _iconColorTween
-      ..begin = theme.unselectedWidgetColor
-      ..end = theme.accentColor;
-    _backgroundColorTween.end = widget.backgroundColor;
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final bool closed = !_isExpanded && _controller.isDismissed;
     final bool shouldRemoveChildren = closed && !widget.maintainState;
 
     final Widget result = Offstage(
+      offstage: closed,
       child: TickerMode(
+        enabled: !closed,
         child: Padding(
           padding: widget.childrenPadding ?? EdgeInsets.zero,
           child: Column(
@@ -280,9 +348,7 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
             children: widget.children,
           ),
         ),
-        enabled: !closed,
       ),
-      offstage: closed
     );
 
     return AnimatedBuilder(

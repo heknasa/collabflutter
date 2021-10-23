@@ -14,14 +14,19 @@
  *  limitations under the License.
  */
 
+// ignore: implementation_imports
 import 'package:convex_bottom_bar/src/painter.dart';
 import 'package:flutter/material.dart';
 
 /// Single convex button widget
-class ConvexButton extends StatelessWidget {
+class HelloConvexButton extends StatelessWidget {
+  // ignore: constant_identifier_names
   static const _DEFAULT_SIZE = 60.0;
+  // ignore: constant_identifier_names
   static const _DEFAULT_TOP = 50.0;
+  // ignore: constant_identifier_names
   static const _DEFAULT_SIGMA = 2.0;
+  // ignore: constant_identifier_names
   static const _DEFAULT_THICKNESS = 4.0;
 
   /// Size of convex shape, should be lager than [top]
@@ -42,8 +47,8 @@ class ConvexButton extends StatelessWidget {
   /// Color for the button
   final Color? backgroundColor;
 
-  /// Make new instance of [ConvexButton]
-  const ConvexButton({
+  /// Make new instance of [HelloConvexButton]
+  const HelloConvexButton({
     Key? key,
     this.size,
     this.sigma,
@@ -56,30 +61,25 @@ class ConvexButton extends StatelessWidget {
   /// Make a centered convex button.
   ///
   /// ![](https://github.com/hacktons/convex_bottom_bar/raw/master/doc/appbar-single-shape.png)
-  factory ConvexButton.fab({
+  factory HelloConvexButton.fab({
     Key? key,
     double? size,
     double? thickness,
     double? top,
     double? sigma,
+    required double bottomMargin,
     double iconSize = 32,
-    double border = 2,
-    Color color = Colors.redAccent,
+    Color? foregroundColor,
     AnimatedIconData icon = AnimatedIcons.menu_close,
     required Animation<double> progress,
     Color? backgroundColor,
     VoidCallback? onTap,
   }) {
-    thickness = thickness ?? _DEFAULT_THICKNESS;
     var fab = Container(
-      margin: EdgeInsets.only(bottom: thickness),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: color, width: border),
-      ),
-      child: AnimatedIcon(icon: icon, color: color, size: iconSize, progress: progress),
+      margin: EdgeInsets.only(bottom: bottomMargin),
+      child: AnimatedIcon(icon: icon, color: foregroundColor, size: iconSize, progress: progress),
     );
-    return ConvexButton(
+    return HelloConvexButton(
       key: key,
       size: size,
       thickness: thickness,
@@ -93,6 +93,7 @@ class ConvexButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.bottomCenter, children: <Widget>[
+      // ignore: sized_box_for_whitespace
       Container(
         height: thickness ?? _DEFAULT_THICKNESS,
         width: double.infinity,
