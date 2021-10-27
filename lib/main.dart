@@ -9,6 +9,7 @@ import 'screens/home_screen.dart';
 import 'providers/global_providers.dart';
 import 'providers/theme_provider.dart';
 import 'package:get/get.dart';
+import 'screens/planner_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +23,12 @@ void main() async {
             themeMode: ref.watch(themeMode),
             theme: ref.watch(theme),
             darkTheme: ref.watch(darkTheme),
-            initialRoute: '/',
+            initialRoute: '/planner',
             getPages: [
               GetPage(name: '/', page: () => const SplashScreen()),
               GetPage(name: '/home', page: () => const HomeScreen(), middlewares: [_Unauthorized()]),
               GetPage(name: '/todo', page: () => const TodoScreen(), middlewares: [_Unauthorized()]),
+              GetPage(name: '/planner', page: () => const PlannerScreen(), middlewares: [_Unauthorized()]),
               GetPage(name: '/login', page: () => const LoginScreen(), middlewares: [_Authorized()]),
             ],
           );

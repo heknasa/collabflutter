@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:collabflutter/states/todo_controller.dart';
+import 'package:collabflutter/states/todo_control.dart';
 import 'package:collabflutter/models/todo_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collabflutter/providers/theme_provider.dart';
@@ -29,7 +28,7 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
   
   @override
   Widget build(BuildContext context) {
-    final todoNotifier = ref.read(TodoController.todoControllerProvider.notifier);
+    final todoNotifier = ref.watch(TodoController.todoControllerProvider.notifier);
     final TextEditingController? _contJudul = useTextEditingController(text: widget.todo.judul);
     final TextEditingController? _contKategori = useTextEditingController(text: widget.todo.kategori);
     final TextEditingController? _contDeskripsi = useTextEditingController(text: widget.todo.deskripsi);
@@ -270,7 +269,7 @@ class TodoDialogState extends ConsumerState<TodoDialog> {
               ElevatedButton(
                 onPressed: () {
                   if (widget.button == 'CREATE') {
-                    if (_contJudul?.text != null && _date != null && _time != null && _contKategori?.text != null && _contKategori?.text != null) {
+                    if (_contJudul?.text.isNotEmpty == true && _date != null && _time != null && _contKategori?.text.isNotEmpty == true && _contDeskripsi?.text.isNotEmpty == true) {
                       todoNotifier.addTodo(
                         TodoModel(
                           judul: _contJudul!.text,

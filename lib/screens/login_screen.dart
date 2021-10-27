@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:collabflutter/states/auth_controller.dart';
+import 'package:collabflutter/states/auth_control.dart';
 import 'package:flutter/material.dart';
 import 'package:collabflutter/providers/theme_provider.dart';
 import 'package:get/get.dart';

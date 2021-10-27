@@ -1,7 +1,7 @@
 import 'package:collabflutter/components/todo_dialog.dart';
 import 'package:collabflutter/components/todo_widget.dart';
 import 'package:collabflutter/models/todo_model.dart';
-import 'package:collabflutter/states/todo_controller.dart';
+import 'package:collabflutter/states/todo_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,5 +1,5 @@
 import 'package:collabflutter/providers/firebase_provider.dart';
-import 'package:collabflutter/states/auth_controller.dart';
+import 'package:collabflutter/states/auth_control.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../models/todo_model.dart';
 
@@ -12,7 +12,6 @@ abstract class BaseTodoRepository {
 
 class TodoRepository implements BaseTodoRepository {
   final Reader _read;
-
   TodoRepository(this._read);
 
   static final todoRepositoryProvider = Provider<TodoRepository>((ref) {
