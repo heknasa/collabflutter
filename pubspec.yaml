@@ -42,10 +42,15 @@ dependencies:
   cloud_firestore: ^2.5.3
   hooks_riverpod: ^1.0.0-dev.11
   flutter_hooks: ^0.18.0
-  convex_bottom_bar: ^3.0.0
   shared_preferences: ^2.0.8
   get: ^4.3.8
   table_calendar: ^3.0.3
+  flame: ^1.0.0-releasecandidate.16
+  flame_audio: ^1.0.0-rc.15
+  tiled: ^0.7.2
+  flutter_switch: ^0.3.2
+  gsheets: ^0.3.2
+  url_launcher: ^6.0.17
 
 dev_dependencies:
   flutter_test:

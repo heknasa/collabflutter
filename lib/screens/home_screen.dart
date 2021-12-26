@@ -8,12 +8,24 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Get.toNamed('/todo');
-          },
-          child: const Text('Go to TODO'),
-        )
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed('/todo');
+              },
+              child: const Text('Go to TODO'),
+            ),
+            SizedBox(),
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed('/planner');
+              },
+              child: const Text('Go to PLAN'),
+            )
+          ],
+        ),
       )
     );
   }

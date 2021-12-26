@@ -13,6 +13,8 @@ abstract class BasePlanRepository {
 class PlanRepository implements BasePlanRepository {
   final Reader _read;
   PlanRepository(this._read);
+  static const collection = 'plans';
+  static const subcollection = 'plan';
 
   static final planRepositoryProvider = Provider<PlanRepository>((ref) {
     return PlanRepository(ref.read);
@@ -22,7 +24,7 @@ class PlanRepository implements BasePlanRepository {
   Future<String> createPlan(PlanModel plan) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    final _plans = _firestore.collection('plans').doc(_uid).collection('plan');
+    final _plans = _firestore.collection(collection).doc(_uid).collection(subcollection);
     final _plan = await _plans.add(plan.toMap());
     return _plan.id;
   }
@@ -31,21 +33,21 @@ class PlanRepository implements BasePlanRepository {
   Future<List<PlanModel>> readPlan() async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    final _todos = await _firestore.collection('plans').doc(_uid).collection('plan').get();
-    return _todos.docs.map((x) => PlanModel.fromDocument(x)).toList();
+    final _plans = await _firestore.collection(collection).doc(_uid).collection(subcollection).orderBy('waktu', descending: true).get();
+    return _plans.docs.map((x) => PlanModel.fromDocument(x)).toList();
   }
 
   @override
   Future<void> updatePlan(PlanModel plan) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    _firestore.collection('plans').doc(_uid).collection('plan').doc(plan.id).update(plan.toMap());
+    _firestore.collection(collection).doc(_uid).collection(subcollection).doc(plan.id).update(plan.toMap());
   }
 
   @override
   Future<void> deletePlan(String id) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    _firestore.collection('plans').doc(_uid).collection('plan').doc(id).delete();
+    _firestore.collection(collection).doc(_uid).collection(subcollection).doc(id).delete();
   }
 }

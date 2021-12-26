@@ -13,6 +13,8 @@ abstract class BaseTodoRepository {
 class TodoRepository implements BaseTodoRepository {
   final Reader _read;
   TodoRepository(this._read);
+  static const collection = 'todos';
+  static const subcollection = 'todo';
 
   static final todoRepositoryProvider = Provider<TodoRepository>((ref) {
     return TodoRepository(ref.read);
@@ -22,7 +24,7 @@ class TodoRepository implements BaseTodoRepository {
   Future<String> createTodo(TodoModel todo) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    final _todos = _firestore.collection('todos').doc(_uid).collection('todo');
+    final _todos = _firestore.collection(collection).doc(_uid).collection(subcollection);
     final _todo = await _todos.add(todo.toMap());
     return _todo.id;
   }
@@ -31,7 +33,7 @@ class TodoRepository implements BaseTodoRepository {
   Future<List<TodoModel>> readTodo() async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    final _todos = await _firestore.collection('todos').doc(_uid).collection('todo').orderBy('waktu', descending: true).get();
+    final _todos = await _firestore.collection(collection).doc(_uid).collection(subcollection).orderBy('waktu', descending: true).get();
     return _todos.docs.map((x) => TodoModel.fromDocument(x)).toList();
   }
 
@@ -39,13 +41,13 @@ class TodoRepository implements BaseTodoRepository {
   Future<void> updateTodo(TodoModel todo) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    _firestore.collection('todos').doc(_uid).collection('todo').doc(todo.id).update(todo.toMap());
+    _firestore.collection(collection).doc(_uid).collection(subcollection).doc(todo.id).update(todo.toMap());
   }
 
   @override
   Future<void> deleteTodo(String id) async {
     final _firestore = _read(FirebaseProvider.firestoreProvider);
     final _uid = _read(AuthController.authControllerProvider)?.uid;
-    _firestore.collection('todos').doc(_uid).collection('todo').doc(id).delete();
+    _firestore.collection(collection).doc(_uid).collection(subcollection).doc(id).delete();
   }
 }

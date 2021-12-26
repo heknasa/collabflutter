@@ -12,19 +12,11 @@ import 'package:collabflutter/providers/theme_provider.dart';
 class TodoScreen extends StatelessWidget{
   const TodoScreen({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    // final _animationController = AnimationController(vsync: this) (hook);
     return Scaffold(
-      // bottomNavigationBar: HelloConvexButton.fab(
-      //   foregroundColor: Theme.of(context).colorScheme.onSurface,
-      //   backgroundColor: Theme.of(context).colorScheme.surface,
-      //   bottomMargin: height * 0.01,
-      //   progress: _animationController,
-      // ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showDialog(

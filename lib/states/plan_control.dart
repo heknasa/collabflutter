@@ -1,8 +1,6 @@
 import 'package:collabflutter/models/plan_model.dart';
 import 'package:collabflutter/services/plan_repo.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:collabflutter/models/todo_model.dart';
-import 'package:collabflutter/services/todo_repo.dart';
 
 class PlanController extends StateNotifier<AsyncValue<List<PlanModel>>> {
   PlanController(this._read) : super(const AsyncValue.loading()) {
