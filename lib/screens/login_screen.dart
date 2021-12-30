@@ -18,7 +18,8 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'SELAMAT DATANG',
+              width <= breakpoint ? 'SELAMAT\nDATANG' : 'SELAMAT DATANG',
+              textAlign: TextAlign.center,
               style: TextStyle(
                   fontWeight: extrabold,
                   fontSize: width <= breakpoint ? headline2 * mobile : headline2

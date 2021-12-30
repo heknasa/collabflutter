@@ -40,149 +40,153 @@ class InternshipDialog extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(                              
-                alignment: Alignment.topRight,
-                margin: const EdgeInsets.all(8.0),
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(
-                      Icons.close_rounded,
-                      size: 40.0,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+        child: Scrollbar(
+          isAlwaysShown: true,
+          showTrackOnHover: true,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(                              
+                  alignment: Alignment.topRight,
+                  margin: const EdgeInsets.all(8.0),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(
+                        Icons.close_rounded,
+                        size: 40.0,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Text(
-                internship.position,
-                style: TextStyle(
-                  fontWeight: extrabold,
-                  fontSize: width <= breakpoint ? headline4 * mobile : headline4
-                )
-              ),
-              SizedBox(height: height * 0.025),
-              Text(
-                internship.company,
-                style: TextStyle(
-                  fontWeight: bold,
-                  fontSize: width <= breakpoint ? headline5 * mobile : headline5
-                )
-              ),
-              SizedBox(height: height * 0.05),
-              Container(
-                width: width * 0.5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Role',
-                      style: TextStyle(
-                        fontWeight: semibold,
-                        fontSize: width <= breakpoint ? headline6 * mobile : headline6
-                      )
-                    ),
-                    SizedBox(height: height * 0.01),
-                    Column(
-                      children: [
-                        for (var i = 0; i < 5; i++) 
-                          if (role[i + 1] == '')...[
-                            const SizedBox.shrink()
-                          ]
-                          else ...[
-                            Text(
-                              '• ' + role[i + 1]!,
-                              style: TextStyle(
-                                fontWeight: regular,
-                                fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
-                              )
-                            )
-                          ]
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: height * 0.03),
-              Container(
-                width: width * 0.5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Qualifications',
-                      style: TextStyle(
-                        fontWeight: semibold,
-                        fontSize: width <= breakpoint ? headline6 * mobile : headline6
-                      )
-                    ),
-                    SizedBox(height: height * 0.01),
-                    Column(
-                      children: [
-                        for (var i = 0; i < 5; i++) 
-                          if (qualification[i + 1] == '')...[
-                            SizedBox.shrink()
-                          ]
-                          else ...[
-                            Text(
-                              '• ' + qualification[i + 1]!,
-                              style: TextStyle(
-                                fontWeight: regular,
-                                fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
-                              )
-                            )
-                          ]
-                      ]                     
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: height * 0.03),
-              Container(
-                width: width * 0.5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Company Profile',
-                      style: TextStyle(
-                        fontWeight: semibold,
-                        fontSize: width <= breakpoint ? headline6 * mobile : headline6
-                      )
-                    ),
-                    SizedBox(height: height * 0.01),
-                    Column(
-                      children: [
-                        Text(
-                          internship.companyProfile,
-                          style: TextStyle(
-                            fontWeight: regular,
-                            fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
-                          )
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: height * 0.05),
-              ElevatedButton(
-                onPressed: _launchURL,
-                child: Text(
-                  'FIND OUT MORE',
+                Text(
+                  internship.position,
                   style: TextStyle(
-                    fontWeight: bold
+                    fontWeight: extrabold,
+                    fontSize: width <= breakpoint ? headline4 * mobile : headline4
+                  )
+                ),
+                SizedBox(height: height * 0.025),
+                Text(
+                  internship.company,
+                  style: TextStyle(
+                    fontWeight: bold,
+                    fontSize: width <= breakpoint ? headline5 * mobile : headline5
+                  )
+                ),
+                SizedBox(height: height * 0.05),
+                Container(
+                  width: width * 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Role',
+                        style: TextStyle(
+                          fontWeight: semibold,
+                          fontSize: width <= breakpoint ? headline6 * mobile : headline6
+                        )
+                      ),
+                      SizedBox(height: height * 0.01),
+                      Column(
+                        children: [
+                          for (var i = 0; i < 5; i++) 
+                            if (role[i + 1] == '')...[
+                              const SizedBox.shrink()
+                            ]
+                            else ...[
+                              Text(
+                                '• ' + role[i + 1]!,
+                                style: TextStyle(
+                                  fontWeight: regular,
+                                  fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
+                                )
+                              )
+                            ]
+                        ],
+                      ),
+                    ],
                   ),
-                )
-              ),
-              SizedBox(height: height * 0.1),
-            ]
+                ),
+                SizedBox(height: height * 0.03),
+                Container(
+                  width: width * 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Qualifications',
+                        style: TextStyle(
+                          fontWeight: semibold,
+                          fontSize: width <= breakpoint ? headline6 * mobile : headline6
+                        )
+                      ),
+                      SizedBox(height: height * 0.01),
+                      Column(
+                        children: [
+                          for (var i = 0; i < 5; i++) 
+                            if (qualification[i + 1] == '')...[
+                              SizedBox.shrink()
+                            ]
+                            else ...[
+                              Text(
+                                '• ' + qualification[i + 1]!,
+                                style: TextStyle(
+                                  fontWeight: regular,
+                                  fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
+                                )
+                              )
+                            ]
+                        ]                     
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: height * 0.03),
+                Container(
+                  width: width * 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Company Profile',
+                        style: TextStyle(
+                          fontWeight: semibold,
+                          fontSize: width <= breakpoint ? headline6 * mobile : headline6
+                        )
+                      ),
+                      SizedBox(height: height * 0.01),
+                      Column(
+                        children: [
+                          Text(
+                            internship.companyProfile,
+                            style: TextStyle(
+                              fontWeight: regular,
+                              fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
+                            )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: height * 0.05),
+                ElevatedButton(
+                  onPressed: _launchURL,
+                  child: Text(
+                    'FIND OUT MORE',
+                    style: TextStyle(
+                      fontWeight: bold
+                    ),
+                  )
+                ),
+                SizedBox(height: height * 0.1),
+              ]
+            ),
           ),
         ),
       ),

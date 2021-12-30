@@ -15,6 +15,21 @@ class InternshipModel {
     required this.link
   });
 
+// Map<int, String?> role = {
+//       1: internship.role1,
+//       2: internship.role2,
+//       3: internship.role3,
+//       4: internship.role4,
+//       5: internship.role5,
+//     };
+//     Map<int, String?> qualification = {
+//       1: internship.qualification1,
+//       2: internship.qualification2,
+//       3: internship.qualification3,
+//       4: internship.qualification4,
+//       5: internship.qualification5,
+//     };
+
   factory InternshipModel.fromGsheets(Map<String, dynamic> json) {
     return InternshipModel(
       id: int.tryParse(json['id'])!,
