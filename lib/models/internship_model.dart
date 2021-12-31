@@ -1,50 +1,41 @@
 class InternshipModel {
   int id;
-  String position, company;
-  String? role1, role2, role3, role4, role5;
-  String? qualification1, qualification2, qualification3, qualification4, qualification5;
+  String position;
+  String company;
+  Map<int, String?> role;
+  Map<int, String?> qualification;
   String companyProfile;
   String link;
 
   InternshipModel({
     required this.id,
-    required this.position, required this.company,
-    this.role1, this.role2, this.role3, this.role4, this.role5,
-    this.qualification1, this.qualification2, this.qualification3, this.qualification4, this.qualification5,
+    required this.position,
+    required this.company,
+    required this.role,
+    required this.qualification,
     required this.companyProfile,
     required this.link
   });
-
-// Map<int, String?> role = {
-//       1: internship.role1,
-//       2: internship.role2,
-//       3: internship.role3,
-//       4: internship.role4,
-//       5: internship.role5,
-//     };
-//     Map<int, String?> qualification = {
-//       1: internship.qualification1,
-//       2: internship.qualification2,
-//       3: internship.qualification3,
-//       4: internship.qualification4,
-//       5: internship.qualification5,
-//     };
 
   factory InternshipModel.fromGsheets(Map<String, dynamic> json) {
     return InternshipModel(
       id: int.tryParse(json['id'])!,
       position: json['position'],
       company: json['company'],
-      role1: json['role1'],
-      role2: json['role2'],
-      role3: json['role3'],
-      role4: json['role4'],
-      role5: json['role5'],
-      qualification1: json['qualification1'],
-      qualification2: json['qualification2'],
-      qualification3: json['qualification3'],
-      qualification4: json['qualification4'],
-      qualification5: json['qualification5'],
+      role: {
+        1: json['role1'],
+        2: json['role2'],
+        3: json['role3'],
+        4: json['role4'],
+        5: json['role5']
+      },
+      qualification: {
+        1: json['qualification1'],
+        2: json['qualification2'],
+        3: json['qualification3'],
+        4: json['qualification4'],
+        5: json['qualification5']
+      },
       companyProfile: json['companyProfile'],
       link: json['link'],
     );
@@ -55,16 +46,8 @@ class InternshipModel {
       'id': id,
       'position': position,
       'company': company,
-      'role1': role1,
-      'role2': role2,
-      'role3': role3,
-      'role4': role4,
-      'role5': role5,
-      'qualification1': qualification1,
-      'qualification2': qualification2,
-      'qualification3': qualification3,
-      'qualification4': qualification4,
-      'qualification5': qualification5,
+      'role': role,
+      'qualification': qualification,
       'companyProfile': companyProfile,
       'link': link,
     };

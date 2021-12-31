@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collabflutter/components/payment_dialog.dart';
+import 'package:collabflutter/components/video_dialog.dart';
 import 'package:collabflutter/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LearnDialog extends StatelessWidget {
   final double width;
@@ -266,7 +268,7 @@ class LearnDialog extends StatelessWidget {
                 ),
                 SizedBox(height: height * 0.05),
                 ElevatedButton(
-                  onPressed: () {                    
+                  onPressed: () async {
                     showDialog(
                       context: context,
                       builder: (context) {                        

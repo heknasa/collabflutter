@@ -20,40 +20,41 @@ class Internship extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          child: Card(
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(width * 0.01)
+          ),
+          elevation: height * 0.01,
+          child: ListTile(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(width * 0.01)
             ),
-            elevation: height * 0.01,
-            child: ListTile(
-              // selimutin mouseregion
-              title: Text(
-                internship.position,
-                style: TextStyle(
-                  fontWeight: semibold,
-                )
-              ),
-              subtitle: Text(
-                internship.company,
-                style: TextStyle(
-                  fontWeight: medium,
-                )
-              ),
+            mouseCursor: SystemMouseCursors.click,
+            title: Text(
+              internship.position,
+              style: TextStyle(
+                fontWeight: semibold,
+              )
             ),
+            subtitle: Text(
+              internship.company,
+              style: TextStyle(
+                fontWeight: medium,
+              )
+            ),
+            onTap: () {
+              showGeneralDialog(
+                context: context,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return InternshipDialog(
+                    internship: internship,
+                    width: width,
+                    height: height,                  
+                  );
+                }
+              );
+            },
           ),
-          onTap: () {
-            showGeneralDialog(
-              context: context,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return InternshipDialog(
-                  internship: internship,
-                  width: width,
-                  height: height,                  
-                );
-              }
-            );
-          }
         ),
         SizedBox(height: height * 0.01)
       ],

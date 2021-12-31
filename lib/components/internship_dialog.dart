@@ -21,20 +21,6 @@ class InternshipDialog extends StatelessWidget {
     void _launchURL() async {
       await launch(internship.link);
     }
-    Map<int, String?> role = {
-      1: internship.role1,
-      2: internship.role2,
-      3: internship.role3,
-      4: internship.role4,
-      5: internship.role5,
-    };
-    Map<int, String?> qualification = {
-      1: internship.qualification1,
-      2: internship.qualification2,
-      3: internship.qualification3,
-      4: internship.qualification4,
-      5: internship.qualification5,
-    };
     return Dialog(
       insetPadding: EdgeInsets.zero,
       child: Container(
@@ -95,12 +81,12 @@ class InternshipDialog extends StatelessWidget {
                       Column(
                         children: [
                           for (var i = 0; i < 5; i++) 
-                            if (role[i + 1] == '')...[
+                            if (internship.role[i + 1] == '')...[
                               const SizedBox.shrink()
                             ]
                             else ...[
                               Text(
-                                '• ' + role[i + 1]!,
+                                '• ' + internship.role[i + 1]!,
                                 style: TextStyle(
                                   fontWeight: regular,
                                   fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1
@@ -129,12 +115,12 @@ class InternshipDialog extends StatelessWidget {
                       Column(
                         children: [
                           for (var i = 0; i < 5; i++) 
-                            if (qualification[i + 1] == '')...[
+                            if (internship.qualification[i + 1] == '')...[
                               SizedBox.shrink()
                             ]
                             else ...[
                               Text(
-                                '• ' + qualification[i + 1]!,
+                                '• ' + internship.qualification[i + 1]!,
                                 style: TextStyle(
                                   fontWeight: regular,
                                   fontSize: width <= breakpoint ? subtitle1 * mobile : subtitle1

@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     StreamSubscription<User?>? _authStateSubscription;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if(user != null) {
+      if (user != null) {
         String returnURL = Get.parameters['return'] ?? '/home';
         WidgetsBinding.instance!.addPostFrameCallback((_) {
           Get.offNamed(returnURL);

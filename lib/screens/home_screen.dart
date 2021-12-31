@@ -30,67 +30,119 @@ class HomeScreen extends StatelessWidget{
               margin: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: 30.0),
-                  ThemeSwitch(),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01)),
-                            actionsPadding: EdgeInsets.all(width <= breakpoint ? width * 0.015 : width * 0.02),
-                            title: Center(
-                              child: Text(
-                                'Log out?',
-                                style: TextStyle(
-                                  fontWeight: bold,
-                                  fontSize: width <= breakpoint ? headline5 * mobile : headline5
-                                ),
+                  Expanded(
+                    flex: 2,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final authController = ref.watch(AuthController.authControllerProvider);
+                        return Row(
+                          children: [
+                            Container(
+                              width: 30.0,
+                              height: 30.0,
+                              child: ClipOval(
+                                child: authController != null
+                                ? Image.network(
+                                  authController.photoURL,
+                                  fit: BoxFit.cover)
+                                : SizedBox.shrink(),
                               ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  width: 3,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),                            
                             ),
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Consumer(
-                                  builder: (context, ref, child) {
-                                    return TextButton(
+                            SizedBox(width: width * 0.005),
+                            Text(
+                              authController != null
+                              ? authController.email
+                              : '',
+                              style: TextStyle(
+                                fontWeight: semibold,
+                                fontSize: width <= breakpoint ? caption * mobile : caption
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: ThemeSwitch()
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.01)),
+                                actionsPadding: EdgeInsets.all(width <= breakpoint ? width * 0.015 : width * 0.02),
+                                title: Center(
+                                  child: Text(
+                                    'Log out?',
+                                    style: TextStyle(
+                                      fontWeight: bold,
+                                      fontSize: width <= breakpoint ? headline5 * mobile : headline5
+                                    ),
+                                  ),
+                                ),
+                                content: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Consumer(
+                                      builder: (context, ref, child) {
+                                        return TextButton(
+                                          onPressed: () {
+                                            ref.watch(AuthController.authControllerProvider.notifier).signOut();
+                                            WidgetsBinding.instance!.addPostFrameCallback((_) {
+                                              Get.offAllNamed('/landing');
+                                            });                                            
+                                          },
+                                          child: Text(
+                                            'IYA',
+                                            style: TextStyle(
+                                              fontSize: width <= breakpoint ? button * mobile : button
+                                            ),
+                                          )
+                                        );
+                                      }
+                                    ),
+                                    TextButton(
                                       onPressed: () {
-                                        ref.watch(AuthController.authControllerProvider.notifier).signOut();
+                                        Get.back();
                                       },
                                       child: Text(
-                                        'IYA',
+                                        'ENGGAK',
                                         style: TextStyle(
                                           fontSize: width <= breakpoint ? button * mobile : button
                                         ),
                                       )
-                                    );
-                                  }
+                                    )
+                                  ],
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                  child: Text(
-                                    'ENGGAK',
-                                    style: TextStyle(
-                                      fontSize: width <= breakpoint ? button * mobile : button
-                                    ),
-                                  )
-                                )
-                              ],
-                            ),
+                              );
+                            }
                           );
-                        }
-                      );
-                    },
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: Icon(
-                        Icons.logout_rounded,
-                        size: 30.0,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        },
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Icon(
+                            Icons.logout_rounded,
+                            size: 30.0,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
                       ),
                     ),
                   ),

@@ -4,7 +4,10 @@ import 'package:collabflutter/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'screens/game_screen.dart';
+import 'screens/info_screen.dart';
+import 'screens/landing_screen.dart';
 import 'screens/learn_screen.dart';
 import 'screens/todo_screen.dart';
 import 'screens/login_screen.dart';
@@ -16,6 +19,7 @@ import 'package:get/get.dart';
 import 'screens/planner_screen.dart';
 
 void main() async {
+  setUrlStrategy(PathUrlStrategy());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await initGlobalProviders();
@@ -24,19 +28,20 @@ void main() async {
       child: Consumer(
         builder: (context, ref, child) {
           return GetMaterialApp(
-            // delete debug
             debugShowCheckedModeBanner: false,
             themeMode: ref.watch(themeMode),
             theme: ref.watch(theme),
             darkTheme: ref.watch(darkTheme),
-            initialRoute: '/',
+            initialRoute: '/landing',
             getPages: [
               GetPage(name: '/', page: () => const SplashScreen()),
+              GetPage(name: '/landing', page: () => const LandingScreen(), middlewares: [_Authorized()]),
               GetPage(name: '/login', page: () => const LoginScreen(), middlewares: [_Authorized()]),
               GetPage(name: '/home', page: () => const HomeScreen(), middlewares: [_Unauthorized()]),
               GetPage(name: '/learn', page: () => const LearnScreen(), middlewares: [_Unauthorized()]),
               GetPage(name: '/internship', page: () => const InternshipScreen()),
               GetPage(name: '/game', page: () => const GameScreen()),
+              GetPage(name: '/info', page: () => const InfoScreen()),
               // GetPage(name: '/todo', page: () => const TodoScreen(), middlewares: [_Unauthorized()]),
               // GetPage(name: '/planner', page: () => const PlannerScreen(), middlewares: [_Unauthorized()]),              
             ],

@@ -54,7 +54,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                'Course Name',
+                                'Course Title',
                                 style: TextStyle(
                                   fontSize: widget.width <= breakpoint ? headline6 * mobile : headline6,
                                 )
@@ -145,34 +145,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                           fontWeight: bold
                         ),
                       ),
-                      SizedBox(height: widget.height * 0.02),
-                      TextField(
-                        controller: TextEditingController(),
-                        maxLength: 50,
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          hintText: 'email for informing the payment method',
-                          labelStyle: TextStyle(
-                            fontWeight: bold,
-                            fontSize: widget.width <= breakpoint ? subtitle1 * mobile : subtitle1
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                            )
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                            )
-                          ),
-                          counter: SizedBox.shrink()
-                        ),
-                        style: TextStyle(
-                          fontWeight: regular,
-                          fontSize: widget.width <= breakpoint ? subtitle2 * mobile : subtitle2
-                        ),
-                      ),
-                      SizedBox(height: widget.height * 0.01),
+                      SizedBox(height: widget.height * 0.02),                                            
                       TextField(
                         controller: TextEditingController(),
                         maxLength: 50,
@@ -198,6 +171,22 @@ class _PaymentDialogState extends State<PaymentDialog> {
                           fontWeight: regular,
                           fontSize: widget.width <= breakpoint ? subtitle2 * mobile : subtitle2
                         ),
+                      ),
+                      SizedBox(height: widget.height * 0.01),
+                      Text(
+                        'Email',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          fontWeight: bold,
+                          fontSize: widget.width <= breakpoint ? 2 * mobile : subtitle2
+                        )
+                      ),
+                      Text(
+                        'anggoraniwari@gmail.com',
+                        style: TextStyle(
+                          fontWeight: regular,
+                          fontSize: widget.width <= breakpoint ? subtitle2 * mobile : subtitle2
+                        )
                       ),
                     ],
                   ),
@@ -307,7 +296,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                               Expanded(
                                 flex: 1,
                                 child: Text(
-                                  'Course Name',
+                                  'Course Title',
                                   style: TextStyle(
                                     fontSize: widget.width <= breakpoint ? subtitle1 * mobile : subtitle1,
                                   )
